@@ -1,3 +1,4 @@
 # Meme Gallery API
 
+<img width="1600" height="900" alt="Screenshot 2025-10-06 212811" src="https://github.com/user-attachments/assets/ea65d881-8691-4832-9995-dd3d86fc7c40" />
 
