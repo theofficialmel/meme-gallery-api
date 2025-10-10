@@ -13,10 +13,42 @@ let memes = [
   { id: 2, title: "Success Kid", url: "https://i.imgur.com/example2.jpg" }
 ];
 
+// Create a logging middleware that runs on every request
+function logger(req, res, next) {
+  console.log(`${req.method} ${req.url} at ${new Date().toISOString()}`);
+  next();
+}
+app.use(logger);
+
+
+
+
 //Implement routes
 app.get("/memes", (req, res) => {
   res.json(memes);
 });
+// Add a new route to your index.js file:
+app.get("/memes/:id", (req, res) => {
+  const { id } = req.params;
+  const meme = memes.find((m) => m.id === parseInt(id));
+  if (!meme) {
+    return res.status(404).json({ error: "Meme not found" });
+  }
+  res.json(meme);
+}); 
+
+//Create an error-handling middleware at the bottom of your routes:
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Something went wrong!" });
+});
+
+//Add a test error route to confirm error handling works:
+app.get("/error-test", (req, res) => {
+  throw new Error("Test error");
+});
+
+
 // POST /memes → add a meme
 
 app.post("/memes", async (req, res) => {
@@ -28,4 +60,5 @@ app.post("/memes", async (req, res) => {
   memes.push(newMeme);
   res.status(201).json(newMeme);
 });
+
 
