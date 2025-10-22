@@ -21,6 +21,36 @@ function logger(req, res, next) {
 app.use(logger);
 
 
+//Add a PUT route to update a meme by ID:
+app.put("/memes/:id", (req, res) => {
+  const { id } = req.params;
+  const { title, url } = req.body;
+  const meme = memes.find((m) => m.id === parseInt(id));
+
+  if (!meme) {
+    return res.status(404).json({ error: "Meme not found" });
+  }
+
+  meme.title = title || meme.title;
+  meme.url = url || meme.url;
+
+  res.json(meme);
+});
+
+//Add a DELETE route to remove a meme by ID:
+app.delete("/memes/:id", (req, res) => {
+  const { id } = req.params;
+  const index = memes.findIndex((m) => m.id === parseInt(id));
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Meme not found" });
+  }
+
+  const deleted = memes.splice(index, 1);
+  res.json(deleted[0]);
+});
+
+
 
 
 //Implement routes
@@ -60,5 +90,31 @@ app.post("/memes", async (req, res) => {
   memes.push(newMeme);
   res.status(201).json(newMeme);
 });
+ 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+// expressJSDocSwagger(app)({
+//   info: {
+//     version: "1.0.0",
+//     title: "Dev Meme API",
+//     description: "Docs for Dev Meme API",
+//   },
+//   // security: { ApiKeyAuth: { type: "apiKey", in: "header", name: "x-api-key" } },
+//   swaggerUIPath: "/docs",
+//   baseDir: process.cwd(), // returns the current working directory
+//   filesPattern: "./src/routes/**/*.{js,ts}",
+//   exposeApiDocs: true,
+//   apiDocsPath: "/api-docs.json",
+// // });
