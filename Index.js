@@ -57,6 +57,15 @@ app.delete("/memes/:id", (req, res) => {
 app.get("/memes", (req, res) => {
   res.json(memes);
 });
+
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+ 
+//updated prisma routes
+app.get("/memes", async (req, res) => {
+  const memes = await prisma.meme.findMany({ include: { user: true } });
+  res.json(memes);
+});
 // Add a new route to your index.js file:
 app.get("/memes/:id", (req, res) => {
   const { id } = req.params;
